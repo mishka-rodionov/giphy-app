@@ -2,6 +2,7 @@ package com.rodionov.giphy_app.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.rodionov.giphy_app.network.ApiService
 import com.rodionov.giphy_app.utils.Settings
 import dagger.Module
 import dagger.Provides
@@ -56,7 +57,7 @@ class NetworkModule {
         .addCallAdapterFactory(rxJava2Adapter)
         .build()
 
-//    @Provides
-//    @Singleton
-//    fun provideApiInterface(retrofit: Retrofit): ApiInterface = retrofit.create<ApiInterface>(ApiInterface::class.java)
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create<ApiService>(ApiService::class.java)
 }

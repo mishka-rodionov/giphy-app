@@ -6,8 +6,14 @@ import com.rodionov.giphy_app.mvp.view.BaseView
 /**
  * Created by rodionov on 18.11.2019.
  */
-interface BasePresenter<in V: BaseView> {
+abstract class BasePresenter<V : BaseView>: IBasePresenter<V> {
 
-    fun attach(view: V)
-    fun detach()
+    lateinit var view: V
+
+    override fun attach(view: V) {
+        this.view = view
+    }
+
+//    override fun detach() {
+//    }
 }

@@ -7,5 +7,6 @@ class Settings {
     companion object{
         const val API_KEY = "hdPiOWIGpfGKYweD6qsLVxykgG7gL3Va"
         const val BASE_URL = "http://api.giphy.com"
+        const val TAG = "PresenterLog"
     }
 }
