@@ -7,6 +7,7 @@ import com.rodionov.giphy_app.utils.Settings
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,10 +25,11 @@ class NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         val timeout = 10
         return OkHttpClient.Builder()
-            .readTimeout(timeout.toLong(), TimeUnit.SECONDS)
-            .writeTimeout(timeout.toLong(), TimeUnit.SECONDS)
-            .connectTimeout(timeout.toLong(), TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
+//            .readTimeout(timeout.toLong(), TimeUnit.SECONDS)
+//            .writeTimeout(timeout.toLong(), TimeUnit.SECONDS)
+//            .connectTimeout(timeout.toLong(), TimeUnit.SECONDS)
+//            .retryOnConnectionFailure(true)
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
     }
 

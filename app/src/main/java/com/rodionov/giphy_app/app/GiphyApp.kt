@@ -2,10 +2,7 @@ package com.rodionov.giphy_app.app
 
 import android.app.Application
 import android.util.Log
-import com.rodionov.giphy_app.di.AppComponent
-import com.rodionov.giphy_app.di.DaggerAppComponent
-import com.rodionov.giphy_app.di.NetworkModule
-import com.rodionov.giphy_app.di.PresenterModule
+import com.rodionov.giphy_app.di.*
 import com.rodionov.giphy_app.utils.Settings
 
 /**
@@ -27,5 +24,6 @@ class GiphyApp : Application() {
     private fun initDagger(): AppComponent = DaggerAppComponent.builder()
         .presenterModule(PresenterModule())
         .networkModule(NetworkModule())
+        .interactModule(InteractModule())
         .build()
 }
