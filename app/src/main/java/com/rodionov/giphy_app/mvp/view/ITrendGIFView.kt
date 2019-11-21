@@ -6,4 +6,5 @@ import com.rodionov.giphy_app.base.IBaseView
  * Created by rodionov on 19.11.2019.
  */
 interface ITrendGIFView: IBaseView {
+    fun updateView(data: MutableList<Any>)
 }
