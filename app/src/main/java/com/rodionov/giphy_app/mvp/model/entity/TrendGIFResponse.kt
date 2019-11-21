@@ -7,12 +7,9 @@ import java.util.ArrayList
  * Created by rodionov on 18.11.2019.
  */
 class TrendGIFResponse(
-/*
-    meta: MetaModel,
+    val meta: Meta,
 
     @SerializedName("data")
-    val gifObjectsList: ArrayList<GifObjectModel>,
+    val gifObjectsList: ArrayList<GIFObject>,
 
-    @SerializedName("pagination")
-    var paginationModel: PaginationModel*/) {
-}
+    var pagination: Pagination)

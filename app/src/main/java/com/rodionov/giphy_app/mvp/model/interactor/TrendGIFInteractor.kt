@@ -2,6 +2,8 @@ package com.rodionov.giphy_app.mvp.model.interactor
 
 import android.util.Log
 import com.rodionov.giphy_app.app.GiphyApp
+import com.rodionov.giphy_app.base.BaseInteractor
+import com.rodionov.giphy_app.base.IBasePresenter
 import com.rodionov.giphy_app.mvp.presenter.TrendGIFPresenter
 import com.rodionov.giphy_app.network.ApiService
 import com.rodionov.giphy_app.utils.Settings
@@ -14,7 +16,7 @@ import javax.inject.Inject
 /**
  * Created by rodionov on 18.11.2019.
  */
-class TrendGIFInteractor(val api: ApiService): BaseInteractor<TrendGIFPresenter>(), ITrendGIFInteractor {
+class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteractorOutput>(), ITrendGIFInteractor {
 
     @Inject
     lateinit var apiService: ApiService
@@ -28,9 +30,17 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<TrendGIFPresenter>
         apiService.getTrending(Settings.API_KEY, 5, 0)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
+            .map {
+                Log.d(Settings.TAG, "on method map gif list size ${it.gifObjectsList.size}")
+                Log.d(Settings.TAG, "on method map message ${it.meta.message}")
+                Log.d(Settings.TAG, "on method map pagination offsetindex ${it.pagination.offsetIndex}")
+                it
+            }
             .subscribeBy(
                 onNext = {
                     Log.d(Settings.TAG, "From TrendGIFInteractor subscribeBy onNext")
+                    interactorOutput?.receivedData()
+
                 },
                 onError = {
                     Log.d(Settings.TAG, "From TrendGIFInteractor subscribeBy onError")
