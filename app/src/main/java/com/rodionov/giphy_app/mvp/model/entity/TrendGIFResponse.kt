@@ -10,6 +10,6 @@ class TrendGIFResponse(
     val meta: Meta,
 
     @SerializedName("data")
-    val gifObjectsList: ArrayList<GIFObject>,
+    val gifObjectsList: ArrayList<GIFObject> = arrayListOf(),
 
     var pagination: Pagination)

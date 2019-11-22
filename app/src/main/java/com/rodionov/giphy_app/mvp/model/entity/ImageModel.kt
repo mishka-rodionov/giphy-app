@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName
  */
 class ImageModel(
     @SerializedName("url")
-    val gifUrl: String,
+    val gifUrl: String = "",
 
     @SerializedName("mp4")
-    val mp4Url: String
+    val mp4Url: String = ""
 ) {
 }

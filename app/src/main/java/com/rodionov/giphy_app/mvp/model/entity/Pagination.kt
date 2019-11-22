@@ -7,12 +7,12 @@ import com.google.gson.annotations.SerializedName
  */
 class Pagination(
     @SerializedName("total_count")
-    private var totalCount: Long,
+    private var totalCount: Long = 0,
 
     @SerializedName("count")
-    private var currentCount: Long,
+    private var currentCount: Long = 0,
 
     @SerializedName("offset")
-    var offsetIndex: Long
+    var offsetIndex: Long = 0
 ) {
 }

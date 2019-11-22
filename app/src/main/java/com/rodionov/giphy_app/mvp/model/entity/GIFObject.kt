@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName
  */
 class GIFObject(
     @SerializedName("title")
-    private val title: String,
+    val title: String,
 
     @SerializedName("images")
-    private val imagesListModel: Images
+    val imagesListModel: Images
 ) {
 }

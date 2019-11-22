@@ -5,10 +5,15 @@ import com.rodionov.giphy_app.app.GiphyApp
 import com.rodionov.giphy_app.base.BasePresenter
 import com.rodionov.giphy_app.base.IBaseInteractor
 import com.rodionov.giphy_app.base.IBaseView
+import com.rodionov.giphy_app.mvp.model.entity.GIFObject
+import com.rodionov.giphy_app.mvp.model.entity.Meta
+import com.rodionov.giphy_app.mvp.model.entity.Pagination
+import com.rodionov.giphy_app.mvp.model.entity.TrendGIFResponse
 import com.rodionov.giphy_app.mvp.model.interactor.ITrendGIFInteractor
 import com.rodionov.giphy_app.mvp.model.interactor.ItrendGIFInteractorOutput
 import com.rodionov.giphy_app.mvp.model.interactor.TrendGIFInteractor
 import com.rodionov.giphy_app.mvp.view.ITrendGIFView
+import com.rodionov.giphy_app.mvp.view.item.GIFListItem
 import com.rodionov.giphy_app.utils.Settings
 import javax.inject.Inject
 
@@ -59,7 +64,8 @@ class TrendGIFPresenter: BasePresenter<ITrendGIFView, ITrendGIFInteractor>(), IT
 
     }
 
-    override fun receivedData() {
+    override fun receivedData(data: MutableList<GIFListItem>) {
+        view?.updateView(data = data)
         Log.d(Settings.TAG, "From TrendGIFPresenter receivedData")
     }
 
