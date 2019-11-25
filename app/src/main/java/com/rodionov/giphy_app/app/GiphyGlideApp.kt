@@ -15,6 +15,5 @@ import com.bumptech.glide.signature.ObjectKey
 open class GiphyGlideApp: AppGlideModule() {
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
-//        builder.apply { RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).signature(ObjectKey(System.currentTimeMillis().toShort())) }
     }
 }

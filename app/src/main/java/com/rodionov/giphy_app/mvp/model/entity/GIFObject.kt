@@ -11,5 +11,4 @@ class GIFObject(
 
     @SerializedName("images")
     val imagesListModel: Images
-) {
-}
+)

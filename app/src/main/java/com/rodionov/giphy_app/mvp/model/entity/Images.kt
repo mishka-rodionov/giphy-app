@@ -7,9 +7,8 @@ import com.google.gson.annotations.SerializedName
  */
 class Images(
     @SerializedName("fixed_width")
-    val fixedHeight: ImageModel,
+    val fixedWidth: ImageModel,
 
     @SerializedName("original_mp4")
     val originalMp4: ImageModel
-) {
-}
+)

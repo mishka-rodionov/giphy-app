@@ -8,4 +8,5 @@ import com.rodionov.giphy_app.mvp.view.item.GIFListItem
  */
 interface ITrendGIFView: IBaseView {
     fun updateView(data: MutableList<GIFListItem>)
+    fun updateSearchView(data: MutableList<GIFListItem>)
 }

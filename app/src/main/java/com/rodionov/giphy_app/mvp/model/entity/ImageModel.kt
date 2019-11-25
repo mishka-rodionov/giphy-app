@@ -14,5 +14,4 @@ class ImageModel(
 
     val width: String = "",
     val height: String = ""
-) {
-}
+)

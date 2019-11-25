@@ -17,7 +17,6 @@ class GiphyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(Settings.TAG, "GiphyApp onCreate")
         appComponent = initDagger()
     }
 

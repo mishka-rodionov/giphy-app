@@ -23,35 +23,49 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
         injectDependency()
     }
 
-    override fun requestData(limit: Int, offset: Long) {
-        Log.d(Settings.TAG, "From TrendGIFInteractor requestData")
+    override fun requestData(limit: Long, offset: Long) {
         apiService.getTrending(Settings.API_KEY, Settings.LIMIT.toLong(), offset = offset)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
-                Log.d(Settings.TAG, "From TrendGIFInteractor requestData pagination")
-                Log.d(Settings.TAG, "offsetIndex ${it.pagination.offsetIndex}")
-                Log.d(Settings.TAG, "totalCount ${it.pagination.totalCount}")
-                Log.d(Settings.TAG, "currentCount ${it.pagination.currentCount}")
                 val gifListItems = mutableListOf<GIFListItem>()
                 it.gifObjectsList.forEach {
                     gifListItems.add(GIFListItem(title = it.title,
-                        url = it.imagesListModel.fixedHeight.gifUrl,
-                        height = it.imagesListModel.fixedHeight.height.toInt()) )
+                        url = it.imagesListModel.fixedWidth.gifUrl,
+                        height = it.imagesListModel.fixedWidth.height.toInt(),
+                        videoURL = it.imagesListModel.originalMp4.mp4Url) )
                 }
                 gifListItems
             }
             .subscribeBy(
                 onNext = {
-                    Log.d(Settings.TAG, "From TrendGIFInteractor subscribeBy onNext")
                     interactorOutput?.receivedData(it)
-
                 },
                 onError = {
-                    Log.d(Settings.TAG, "From TrendGIFInteractor subscribeBy onError")
-                    Log.d(Settings.TAG, it.message)
                 }
 
+            )
+    }
+
+    override fun requestData(query: String, limit: Long, offset: Long) {
+        apiService.getSearching(Settings.API_KEY, query = query, limit = Settings.LIMIT.toLong(), offset = offset)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map {
+                val gifListItems = mutableListOf<GIFListItem>()
+                it.gifObjectsList.forEach {
+                    gifListItems.add(GIFListItem(title = it.title,
+                        url = it.imagesListModel.fixedWidth.gifUrl,
+                        height = it.imagesListModel.fixedWidth.height.toInt(),
+                        videoURL = it.imagesListModel.originalMp4.mp4Url) )
+                }
+                gifListItems
+            }
+            .subscribeBy(
+                onNext = {
+                    interactorOutput?.receivedData(it)
+                },
+                onError = {}
             )
     }
 
@@ -63,8 +77,9 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
                 val gifListItems = mutableListOf<GIFListItem>()
                 it.gifObjectsList.forEach {
                     gifListItems.add(GIFListItem(title = it.title,
-                        url = it.imagesListModel.fixedHeight.gifUrl,
-                        height = it.imagesListModel.fixedHeight.height.toInt()) )
+                        url = it.imagesListModel.fixedWidth.gifUrl,
+                        height = it.imagesListModel.fixedWidth.height.toInt(),
+                        videoURL = it.imagesListModel.originalMp4.mp4Url) )
                 }
                 gifListItems
             }
