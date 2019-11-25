@@ -54,7 +54,7 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
                 layoutParams.width =
                     UIUtils.getScreenWidthInPx(context as Context) - UIUtils.convertDpToPixel(8F).toInt()
                 val scaleFactor: Float =
-                    (UIUtils.getScreenWidthInPx(context as Context) - UIUtils.convertDpToPixel(8F).toInt()).toFloat() / 200F
+                    (UIUtils.getScreenWidthInPx(context as Context) - UIUtils.convertDpToPixel(8F).toInt()).toFloat() / Settings.FIXED_WIDTH
                 layoutParams.height = (list[it.adapterPosition].height * scaleFactor).toInt()
                 imageView.layoutParams = layoutParams
                 it.binding.tvItemGifListTitle.text = title
@@ -68,7 +68,6 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
                             target: Target<Drawable>,
                             isFirstResource: Boolean
                         ): Boolean {
-                            Log.d(Settings.TAG, "MainActivity listener onLoadFailed")
                             return false
                         }
 
@@ -79,7 +78,6 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
                             dataSource: DataSource,
                             isFirstResource: Boolean
                         ): Boolean {
-                            Log.d(Settings.TAG, "MainActivity listener onResourceReady")
                             it.binding.pbItemGiftList.visibility = View.GONE
                             return false
                         }
@@ -106,14 +104,11 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
         searchImageView.setOnClickListener {
             searchString = searchEditText.text.toString().trim()
             if (!searchString.isNullOrEmpty()) {
-                Log.d(Settings.TAG, "searchString.isNullOrEmpty() $searchString")
                 presenter.requestSearchData(searchEditText.text.toString(), 0, 0)
             } else {
-                Log.d(Settings.TAG, "searchString NullOrEmpty $searchString")
             }
         }
         clear.setOnClickListener {
-            Log.d(Settings.TAG, "clear $searchString")
             if (!searchString.isNullOrEmpty()) {
                 searchString = ""
                 searchEditText.text.clear()
@@ -147,11 +142,11 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
     }
 
     override fun requestData() {
-        presenter.requestData("", 0, 0)
+        if (list.size == 0)
+            presenter.requestData("", 0, 0)
     }
 
     override fun updateView(data: MutableList<GIFListItem>) {
-        Log.d(Settings.TAG, "MainActivity updateView")
         list.addAll(data)
         adapter.notifyDataSetChanged()
     }
@@ -160,6 +155,11 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
         list.clear()
         list.addAll(data)
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onBackPressed() {
+        activity?.finish()
+        super.onBackPressed()
     }
 
     fun injectDependencies() {

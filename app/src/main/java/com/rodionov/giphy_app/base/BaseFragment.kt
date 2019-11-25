@@ -10,7 +10,7 @@ import com.rodionov.giphy_app.R
 /**
  * Created by rodionov on 25.11.2019.
  */
-open abstract class BaseFragment: Fragment(){
+open abstract class BaseFragment: Fragment(), OnBackPressed{
 
     private var containerView: ViewGroup? = null
     private var contentView: View? = null
@@ -27,6 +27,10 @@ open abstract class BaseFragment: Fragment(){
         super.onViewCreated(view, savedInstanceState)
         initViews(view = view)
         requestData()
+    }
+
+    override fun onBackPressed() {
+
     }
 
     protected abstract fun initViews(view: View)

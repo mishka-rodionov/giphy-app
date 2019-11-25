@@ -9,6 +9,7 @@ class Settings {
         const val BASE_URL = "http://api.giphy.com"
         const val TAG = "PresenterLog"
         const val LIMIT = 20
+        const val FIXED_WIDTH = 200F
         const val PREPARATION = LIMIT / 2
 
     }

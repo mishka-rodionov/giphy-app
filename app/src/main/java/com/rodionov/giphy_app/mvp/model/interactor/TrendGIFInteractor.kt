@@ -1,6 +1,5 @@
 package com.rodionov.giphy_app.mvp.model.interactor
 
-import android.util.Log
 import com.rodionov.giphy_app.app.GiphyApp
 import com.rodionov.giphy_app.base.BaseInteractor
 import com.rodionov.giphy_app.mvp.view.item.GIFListItem
