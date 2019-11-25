@@ -3,15 +3,12 @@ package com.rodionov.giphy_app.mvp.model.interactor
 import android.util.Log
 import com.rodionov.giphy_app.app.GiphyApp
 import com.rodionov.giphy_app.base.BaseInteractor
-import com.rodionov.giphy_app.base.IBasePresenter
-import com.rodionov.giphy_app.mvp.presenter.TrendGIFPresenter
 import com.rodionov.giphy_app.mvp.view.item.GIFListItem
 import com.rodionov.giphy_app.network.ApiService
 import com.rodionov.giphy_app.utils.Settings
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
 import javax.inject.Inject
 
 /**
@@ -26,18 +23,21 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
         injectDependency()
     }
 
-    override fun requestData() {
+    override fun requestData(limit: Int, offset: Long) {
         Log.d(Settings.TAG, "From TrendGIFInteractor requestData")
-        apiService.getTrending(Settings.API_KEY, 5, 0)
+        apiService.getTrending(Settings.API_KEY, Settings.LIMIT.toLong(), offset = offset)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
+                Log.d(Settings.TAG, "From TrendGIFInteractor requestData pagination")
+                Log.d(Settings.TAG, "offsetIndex ${it.pagination.offsetIndex}")
+                Log.d(Settings.TAG, "totalCount ${it.pagination.totalCount}")
+                Log.d(Settings.TAG, "currentCount ${it.pagination.currentCount}")
                 val gifListItems = mutableListOf<GIFListItem>()
-//                Log.d(Settings.TAG, "on method map gif list size ${it.gifObjectsList.size}")
-//                Log.d(Settings.TAG, "on method map message ${it.meta.message}")
-//                Log.d(Settings.TAG, "on method map pagination offsetindex ${it.pagination.offsetIndex}")
                 it.gifObjectsList.forEach {
-                    gifListItems.add(GIFListItem(title = it.title, url = it.imagesListModel.fixedHeightStill.gifUrl))
+                    gifListItems.add(GIFListItem(title = it.title,
+                        url = it.imagesListModel.fixedHeight.gifUrl,
+                        height = it.imagesListModel.fixedHeight.height.toInt()) )
                 }
                 gifListItems
             }
@@ -52,6 +52,27 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
                     Log.d(Settings.TAG, it.message)
                 }
 
+            )
+    }
+
+    override fun requestSearchData(query: String, limit: Long, offset: Long) {
+        apiService.getSearching(Settings.API_KEY, query = query, limit = Settings.LIMIT.toLong(), offset = offset)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map {
+                val gifListItems = mutableListOf<GIFListItem>()
+                it.gifObjectsList.forEach {
+                    gifListItems.add(GIFListItem(title = it.title,
+                        url = it.imagesListModel.fixedHeight.gifUrl,
+                        height = it.imagesListModel.fixedHeight.height.toInt()) )
+                }
+                gifListItems
+            }
+            .subscribeBy(
+                onNext = {
+                    interactorOutput?.receivedSearchData(it)
+                },
+                onError = {}
             )
     }
 

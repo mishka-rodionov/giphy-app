@@ -6,7 +6,7 @@ import java.util.ArrayList
 /**
  * Created by rodionov on 18.11.2019.
  */
-class TrendGIFResponse(
+class GIFResponse(
     val meta: Meta,
 
     @SerializedName("data")

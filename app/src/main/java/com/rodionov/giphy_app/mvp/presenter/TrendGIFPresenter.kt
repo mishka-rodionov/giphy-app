@@ -3,12 +3,7 @@ package com.rodionov.giphy_app.mvp.presenter
 import android.util.Log
 import com.rodionov.giphy_app.app.GiphyApp
 import com.rodionov.giphy_app.base.BasePresenter
-import com.rodionov.giphy_app.base.IBaseInteractor
 import com.rodionov.giphy_app.base.IBaseView
-import com.rodionov.giphy_app.mvp.model.entity.GIFObject
-import com.rodionov.giphy_app.mvp.model.entity.Meta
-import com.rodionov.giphy_app.mvp.model.entity.Pagination
-import com.rodionov.giphy_app.mvp.model.entity.TrendGIFResponse
 import com.rodionov.giphy_app.mvp.model.interactor.ITrendGIFInteractor
 import com.rodionov.giphy_app.mvp.model.interactor.ItrendGIFInteractorOutput
 import com.rodionov.giphy_app.mvp.model.interactor.TrendGIFInteractor
@@ -36,37 +31,24 @@ class TrendGIFPresenter: BasePresenter<ITrendGIFView, ITrendGIFInteractor>(), IT
         Log.d(Settings.TAG, "From TrendGIFPresenter attach")
     }
 
-//    override fun detachView() {
-//
-//    }
 
-//    override fun attachInteractor(interactor: IBaseInteractor) {
-//        super.attachInteractor(interactor)
-//    }
-
-//    override fun detachInteractor() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-
-//    override fun attach(view: ITrendGIFView) {
-//        super.attach(view)
-//        view.showMessage("123456789")
-//        Log.d(Settings.TAG, "From TrendGIFPresenter attach")
-//    }
-
-//    override fun detach() {
-//        Log.d(Settings.TAG, "From TrendGIFPresenter detach")
-//    }
-
-    override fun requestData() {
+    override fun requestData(limit: Int, offset: Long) {
         Log.d(Settings.TAG, "From TrendGIFPresenter requestData")
-        interactor?.requestData()
+        interactor?.requestData(limit, offset)
 
+    }
+
+    override fun requestSearchData(query: String, limit: Long, offset: Long) {
+        interactor?.requestSearchData(query = query, limit = limit, offset = offset)
     }
 
     override fun receivedData(data: MutableList<GIFListItem>) {
         view?.updateView(data = data)
         Log.d(Settings.TAG, "From TrendGIFPresenter receivedData")
+    }
+
+    override fun receivedSearchData(data: MutableList<GIFListItem>) {
+        view?.updateView(data = data)
     }
 
     private fun injectDependency(){

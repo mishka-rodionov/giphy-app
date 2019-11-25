@@ -7,12 +7,16 @@ import com.google.gson.annotations.SerializedName
  */
 class Pagination(
     @SerializedName("total_count")
-    private var totalCount: Long = 0,
+    var totalCount: Long = 0,
 
     @SerializedName("count")
-    private var currentCount: Long = 0,
+    var currentCount: Long = 0,
 
     @SerializedName("offset")
     var offsetIndex: Long = 0
 ) {
+
+    fun hasMore() =
+        currentCount + offsetIndex < totalCount
+
 }

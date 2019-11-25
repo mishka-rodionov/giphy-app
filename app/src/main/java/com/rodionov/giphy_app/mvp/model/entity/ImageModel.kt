@@ -10,6 +10,9 @@ class ImageModel(
     val gifUrl: String = "",
 
     @SerializedName("mp4")
-    val mp4Url: String = ""
+    val mp4Url: String = "",
+
+    val width: String = "",
+    val height: String = ""
 ) {
 }

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,6 +22,7 @@ import com.rodionov.giphy_app.databinding.GifListItemBinding
 import com.rodionov.giphy_app.mvp.presenter.ITrendGIFPresenter
 import com.rodionov.giphy_app.mvp.view.item.GIFListItem
 import com.rodionov.giphy_app.utils.Settings
+import com.rodionov.giphy_app.utils.UIUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -35,8 +38,13 @@ class MainActivity : AppCompatActivity(), ITrendGIFView {
                 val url = list[it.adapterPosition].url
                 val title = list[it.adapterPosition].title
                 val imageView = it.binding.ivItemGifList
-                Log.d(Settings.TAG, "MainActivity onBind url $url")
-                Log.d(Settings.TAG, "MainActivity onBind url $title")
+//                Log.d(Settings.TAG, "MainActivity onBind url $url")
+//                Log.d(Settings.TAG, "MainActivity onBind url $title")
+                val layoutParams = imageView.layoutParams
+                layoutParams.width = UIUtils.getScreenWidthInPx(this@MainActivity) - UIUtils.convertDpToPixel(8F).toInt()
+                val scaleFactor: Float = (UIUtils.getScreenWidthInPx(this@MainActivity) - UIUtils.convertDpToPixel(8F).toInt()).toFloat() / 200F
+                layoutParams.height = (list[it.adapterPosition].height * scaleFactor).toInt()
+                imageView.layoutParams = layoutParams
                 it.binding.tvItemGifListTitle.text = title
                 GlideApp.with(imageView.context)
                     .load(url)
@@ -62,11 +70,29 @@ class MainActivity : AppCompatActivity(), ITrendGIFView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter.into(gifListRecyclerView)
+        initViews()
+        gifListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            var currentLastVisibleItemIndex = -1
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val item = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if(item == (list.size - Settings.PREPARATION)){
+                    if (currentLastVisibleItemIndex != item)
+                    {
+                        currentLastVisibleItemIndex = item
+                        presenter.requestData(0, list.size.toLong() + 1)
+                        Log.d(Settings.TAG, "MainActivity onScrolled $item")
+                    }
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
         injectDependencies()
         presenter.attachView(this)
-//        presenter.detach()
-        presenter.requestData()
+        presenter.requestData(0,0)
     }
 
     override fun attach(presenter: com.rodionov.giphy_app.base.IBasePresenter) {
@@ -77,10 +103,16 @@ class MainActivity : AppCompatActivity(), ITrendGIFView {
 
     }
 
+    private fun initViews(){
+        adapter.into(gifListRecyclerView)
+        searchImageView.setOnClickListener {
+            presenter.requestSearchData(searchEditText.text.toString(), 0, 0 )
+        }
+    }
+
     override fun updateView(data: MutableList<GIFListItem>) {
         Log.d(Settings.TAG, "MainActivity updateView")
-        adapter.into(gifListRecyclerView)
-        list.clear()
+//        list.clear()
         list.addAll(data)
         adapter.notifyDataSetChanged()
     }

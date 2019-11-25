@@ -8,5 +8,8 @@ class Settings {
         const val API_KEY = "hdPiOWIGpfGKYweD6qsLVxykgG7gL3Va"
         const val BASE_URL = "http://api.giphy.com"
         const val TAG = "PresenterLog"
+        const val LIMIT = 20
+        const val PREPARATION = LIMIT / 2
+
     }
 }

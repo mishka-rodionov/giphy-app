@@ -7,4 +7,5 @@ import com.rodionov.giphy_app.mvp.view.item.GIFListItem
  */
 interface ItrendGIFInteractorOutput {
     fun receivedData(data: MutableList<GIFListItem>)
+    fun receivedSearchData(data: MutableList<GIFListItem>)
 }
