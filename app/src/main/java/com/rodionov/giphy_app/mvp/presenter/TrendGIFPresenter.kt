@@ -52,6 +52,10 @@ class TrendGIFPresenter: BasePresenter<ITrendGIFView, ITrendGIFInteractor>(), IT
             fragment = fragment)
     }
 
+    override fun errorMessage(message: String) {
+        view?.showMessage(message)
+    }
+
     private fun injectDependency(){
         GiphyApp.getInjector()?.inject(this)
     }

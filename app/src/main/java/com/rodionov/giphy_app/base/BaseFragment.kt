@@ -1,16 +1,18 @@
 package com.rodionov.giphy_app.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import com.rodionov.giphy_app.R
 
 /**
  * Created by rodionov on 25.11.2019.
  */
-open abstract class BaseFragment: Fragment(), OnBackPressed{
+abstract class BaseFragment: Fragment(), OnBackPressed{
 
     private var containerView: ViewGroup? = null
     private var contentView: View? = null
@@ -31,6 +33,14 @@ open abstract class BaseFragment: Fragment(), OnBackPressed{
 
     override fun onBackPressed() {
 
+    }
+
+    protected fun hideKeyboard() {
+        val view = activity!!.currentFocus
+        if (view != null) {
+            val imm = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     protected abstract fun initViews(view: View)

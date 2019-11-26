@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.github.nitrico.lastadapter.LastAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.rodionov.giphy_app.BR
 import com.rodionov.giphy_app.R
 import com.rodionov.giphy_app.app.GiphyApp
@@ -101,20 +102,62 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
 
     override fun initViews(view: View) {
         adapter.into(gifListRecyclerView)
+
+        searchEditText.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(p0: Editable?) {
+                Log.d(Settings.TAG, "afterTextChanged $p0")
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                Log.d(Settings.TAG, "beforeTextChanged $p0")
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (clear.visibility == View.INVISIBLE && !p0?.trim().isNullOrEmpty())
+                    clear.visibility = View.VISIBLE
+                if (clear.visibility == View.VISIBLE && p0?.trim().isNullOrEmpty())
+                    clear.visibility = View.INVISIBLE
+                Log.d(Settings.TAG, "onTextChanged $p0")
+            }
+        })
+
+        searchGIF()
+
+        clearSearchEditText()
+
+        addOnScrollListenerToRecyclerView()
+
+        injectDependencies()
+        presenter.attachView(this)
+    }
+
+    private fun searchGIF() {
+
         searchImageView.setOnClickListener {
+            hideKeyboard()
             searchString = searchEditText.text.toString().trim()
             if (!searchString.isNullOrEmpty()) {
                 presenter.requestSearchData(searchEditText.text.toString(), 0, 0)
+//                presenter.requestData(searchEditText.text.toString(), 0, 0)
             } else {
             }
         }
+    }
+
+    private fun clearSearchEditText() {
         clear.setOnClickListener {
+            Log.d(Settings.TAG, "clear $searchString")
+            searchEditText.text.clear()
             if (!searchString.isNullOrEmpty()) {
                 searchString = ""
-                searchEditText.text.clear()
+                list.clear()
+                adapter.notifyDataSetChanged()
                 presenter.requestData("", 0, 0)
             }
         }
+    }
+
+    private fun addOnScrollListenerToRecyclerView() {
         gifListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var currentLastVisibleItemIndex = -1
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -128,13 +171,7 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
                     }
                 }
             }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
         })
-        injectDependencies()
-        presenter.attachView(this)
     }
 
     override fun getLayoutResource(): Int {
@@ -147,12 +184,17 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
     }
 
     override fun updateView(data: MutableList<GIFListItem>) {
+        Log.d(Settings.TAG, "updateView")
         list.addAll(data)
         adapter.notifyDataSetChanged()
     }
 
     override fun updateSearchView(data: MutableList<GIFListItem>) {
+        Log.d(Settings.TAG, "updateSearchView")
+        Log.d(Settings.TAG, "updateSearchView ${list.size}")
         list.clear()
+        Log.d(Settings.TAG, "updateSearchView after clear ${list.size}")
+//        adapter.notifyDataSetChanged()
         list.addAll(data)
         adapter.notifyDataSetChanged()
     }
@@ -162,11 +204,20 @@ class TrendGIFFragment : BaseFragment(), ITrendGIFView {
         super.onBackPressed()
     }
 
-    fun injectDependencies() {
+    private fun injectDependencies() {
         GiphyApp.getInjector()?.inject(this)
     }
 
     override fun showMessage(message: String) {
         Log.d(Settings.TAG, "MainActivity showMessage $message")
+        Snackbar.make(activity?.findViewById(R.id.contentFrame) as View, message, Snackbar.LENGTH_INDEFINITE)
+            .setAction("RETRY", object : View.OnClickListener{
+                override fun onClick(p0: View?) {
+                    Log.d(Settings.TAG, "searchstring $searchString")
+                    presenter.requestData(searchString, 0, list.size.toLong() + 1)
+                }
+            })
+            .setActionTextColor(resources.getColor(R.color.colorPrimary))
+            .show()
     }
 }

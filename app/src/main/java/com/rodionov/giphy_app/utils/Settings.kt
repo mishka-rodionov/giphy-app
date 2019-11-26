@@ -11,6 +11,7 @@ class Settings {
         const val LIMIT = 20
         const val FIXED_WIDTH = 200F
         const val PREPARATION = LIMIT / 2
+        const val CHECK_INTERNET_CONNECTION = "Please, check your internet connection."
 
     }
 }

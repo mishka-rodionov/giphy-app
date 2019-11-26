@@ -1,5 +1,6 @@
 package com.rodionov.giphy_app.mvp.model.interactor
 
+import android.util.Log
 import com.rodionov.giphy_app.app.GiphyApp
 import com.rodionov.giphy_app.base.BaseInteractor
 import com.rodionov.giphy_app.mvp.view.item.GIFListItem
@@ -41,6 +42,7 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
                     interactorOutput?.receivedData(it)
                 },
                 onError = {
+                    interactorOutput?.errorMessage(Settings.CHECK_INTERNET_CONNECTION)
                 }
 
             )
@@ -62,9 +64,14 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
             }
             .subscribeBy(
                 onNext = {
-                    interactorOutput?.receivedData(it)
+                    if (offset != 0L)
+                        interactorOutput?.receivedData(it)
+                    else
+                        interactorOutput?.receivedSearchData(it)
                 },
-                onError = {}
+                onError = {
+                    interactorOutput?.errorMessage(Settings.CHECK_INTERNET_CONNECTION)
+                }
             )
     }
 
@@ -84,9 +91,14 @@ class TrendGIFInteractor(val api: ApiService): BaseInteractor<ItrendGIFInteracto
             }
             .subscribeBy(
                 onNext = {
-                    interactorOutput?.receivedSearchData(it)
+                    if (offset != 0L)
+                        interactorOutput?.receivedData(it)
+                    else
+                        interactorOutput?.receivedSearchData(it)
                 },
-                onError = {}
+                onError = {
+                    interactorOutput?.errorMessage(Settings.CHECK_INTERNET_CONNECTION)
+                }
             )
     }
 
