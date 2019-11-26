@@ -33,10 +33,6 @@ class TrendGIFPresenter: BasePresenter<ITrendGIFView, ITrendGIFInteractor>(), IT
 
     }
 
-    override fun requestSearchData(query: String, limit: Long, offset: Long) {
-        interactor?.requestSearchData(query = query, limit = limit, offset = offset)
-    }
-
     override fun receivedData(data: MutableList<GIFListItem>) {
         view?.updateView(data = data)
     }

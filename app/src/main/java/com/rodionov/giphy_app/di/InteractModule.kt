@@ -1,7 +1,6 @@
 package com.rodionov.giphy_app.di
 
 import com.rodionov.giphy_app.mvp.model.interactor.TrendGIFInteractor
-import com.rodionov.giphy_app.network.ApiService
 import dagger.Module
 import dagger.Provides
 
@@ -12,8 +11,8 @@ import dagger.Provides
 class InteractModule {
 
     @Provides
-    fun provideTrendGIFInteractor(api: ApiService): TrendGIFInteractor {
-        return TrendGIFInteractor(api)
+    fun provideTrendGIFInteractor(): TrendGIFInteractor {
+        return TrendGIFInteractor()
     }
 
 }

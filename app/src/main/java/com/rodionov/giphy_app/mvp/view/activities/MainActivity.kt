@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.rodionov.giphy_app.R.layout.activity_main2)
+        setContentView(com.rodionov.giphy_app.R.layout.activity_main)
         BaseRouter.openFirstFragment(fragmentManager = supportFragmentManager)
     }
 
